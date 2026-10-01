@@ -1,0 +1,14 @@
+{
+  "parses_without_errors": true,
+  "raw_rows_200": true,
+  "currency_reports_3": true,
+  "baseline_all_six_succeeded": true,
+  "replay_all_six_succeeded": true,
+  "replay_database_unchanged": true,
+  "invalid_run_failed": true,
+  "invalid_validation_failed": true,
+  "downstream_not_executed": true,
+  "rejected_input_database_unchanged": true,
+  "unit_tests_passed": true,
+  "connection_test_passed": true
+}

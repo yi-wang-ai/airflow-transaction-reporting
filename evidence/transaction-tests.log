@@ -1,0 +1,14 @@
+Docker image ghcr.io/apache/airflow/main/ci/python3.12 was built from the same
+important sources - no rebuild is needed.
+
+Running command: pytest
+
+Docker container engine detected.
+
+Using 'uv' to install Airflow
+
+
+Using airflow version from current sources
+
+......................                                                   [100%]
+22 passed in 4.00s
