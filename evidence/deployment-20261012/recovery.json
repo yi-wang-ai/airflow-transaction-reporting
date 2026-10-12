@@ -1,0 +1,27 @@
+{
+  "started_utc": "2026-10-12T00:11:36.265884+00:00",
+  "data_kind": "synthetic",
+  "scope": "logical restore into isolated database on same server",
+  "status": "passed",
+  "source_before": {
+    "raw_count": 200,
+    "raw_digest": "4b1fe16c6d9b5ffbeec224a9dc9bc6ce",
+    "report_count": 3,
+    "report_digest": "93824eb414e47aa8fe054283eeb0f6b5"
+  },
+  "dump_sha256": "7eb7eb66d8a6a7fac9b3f219469f943423e536924f44105e13947d313b6fd5e2",
+  "restore_seconds": 0.11,
+  "restored": {
+    "raw_count": 200,
+    "raw_digest": "4b1fe16c6d9b5ffbeec224a9dc9bc6ce",
+    "report_count": 3,
+    "report_digest": "93824eb414e47aa8fe054283eeb0f6b5"
+  },
+  "source_after": {
+    "raw_count": 200,
+    "raw_digest": "4b1fe16c6d9b5ffbeec224a9dc9bc6ce",
+    "report_count": 3,
+    "report_digest": "93824eb414e47aa8fe054283eeb0f6b5"
+  },
+  "elapsed_seconds": 0.702
+}

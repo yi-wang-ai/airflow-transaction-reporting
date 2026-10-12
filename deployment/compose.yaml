@@ -1,0 +1,64 @@
+name: payment-teaching-lab
+services:
+  postgres:
+    image: postgres:14@sha256:c2427de38f998489d36de7ca3553db2134872c400f2b08be4b824e5c50e4d619
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets: [postgres_password, payments_password, airflow_password]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/10-lab.sh:ro
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  init-state:
+    image: apache/airflow:3.1.0-python3.12@sha256:e81cb98fe4e5f60fadde8cc6a1c926a363720339062cd53db04b6442950ab9ee
+    user: "0:0"
+    entrypoint: [bash, -c, "chown 50000:0 /opt/airflow/state && chmod 770 /opt/airflow/state"]
+    volumes:
+      - airflow-state:/opt/airflow/state
+  airflow:
+    image: apache/airflow:3.1.0-python3.12@sha256:e81cb98fe4e5f60fadde8cc6a1c926a363720339062cd53db04b6442950ab9ee
+    entrypoint: [python, /opt/lab/bootstrap.py]
+    command: [standalone]
+    environment:
+      AIRFLOW_HOME: /opt/airflow/state
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: 'teacher:admin'
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    secrets: [payments_password, airflow_password, fernet_key, jwt_secret]
+    volumes:
+      - airflow-state:/opt/airflow/state
+      - ../dags:/opt/airflow/dags:ro
+      - ../scripts:/opt/lab:ro
+      - ../tests:/opt/airflow/tests:ro
+    ports: ['127.0.0.1:18080:8080']
+    depends_on:
+      init-state:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, /opt/lab/healthcheck.py]
+      interval: 20s
+      timeout: 10s
+      start_period: 90s
+      retries: 10
+secrets:
+  postgres_password:
+    file: ../.secrets/postgres_password
+  payments_password:
+    file: ../.secrets/payments_password
+  airflow_password:
+    file: ../.secrets/airflow_password
+  fernet_key:
+    file: ../.secrets/fernet_key
+  jwt_secret:
+    file: ../.secrets/jwt_secret
+volumes:
+  postgres-data:
+  airflow-state:

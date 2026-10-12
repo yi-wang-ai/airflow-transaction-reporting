@@ -1,0 +1,19 @@
+ Container payment-teaching-lab-fresh-airflow-run-b83e4ee08170 Creating 
+ Container payment-teaching-lab-fresh-airflow-run-b83e4ee08170 Created 
+Collecting pytest==8.4.2
+  Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+Collecting iniconfig>=1 (from pytest==8.4.2)
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Requirement already satisfied: packaging>=20 in /home/airflow/.local/lib/python3.12/site-packages (from pytest==8.4.2) (25.0)
+Requirement already satisfied: pluggy<2,>=1.5 in /home/airflow/.local/lib/python3.12/site-packages (from pytest==8.4.2) (1.6.0)
+Requirement already satisfied: pygments>=2.7.2 in /home/airflow/.local/lib/python3.12/site-packages (from pytest==8.4.2) (2.19.2)
+Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Installing collected packages: iniconfig, pytest
+
+Successfully installed iniconfig-2.3.1 pytest-8.4.2
+
+[notice] A new release of pip is available: 25.2 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+......................                                                   [100%]
+22 passed in 2.48s

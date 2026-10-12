@@ -1,0 +1,39 @@
+name: Teaching deployment and recovery
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create ephemeral local secrets
+        run: python3 scripts/init_secrets.py
+      - name: Start isolated teaching stack
+        run: docker compose -f deployment/compose.yaml up -d --wait --wait-timeout 240
+      - name: Verify actual database privileges
+        run: docker compose -f deployment/compose.yaml exec -T airflow python /opt/lab/check_access.py
+      - name: Baseline, replay and rejected input against PostgreSQL
+        run: |
+          mkdir -p artifacts
+          docker compose -f deployment/compose.yaml exec -T airflow python /opt/lab/integration_check.py > artifacts/integration.txt 2>&1
+      - name: Pure-function tests in a disposable container
+        run: >-
+          docker compose -f deployment/compose.yaml run --rm --no-deps --entrypoint bash airflow
+          -c 'python -m pip install pytest==8.4.2 && python -m pytest /opt/airflow/tests -q -p no:cacheprovider'
+      - name: Logical backup and isolated restore verification
+        run: python3 scripts/recovery_drill.py --output artifacts/recovery
+      - name: Preserve non-secret test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: payment-lab-${{ github.run_id }}
+          path: artifacts/
+          retention-days: 14
+      - name: Stop stack
+        if: always()
+        run: docker compose -f deployment/compose.yaml down

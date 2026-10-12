@@ -1,0 +1,10 @@
+{
+  "baseline": "success",
+  "currency_groups": 3,
+  "data_kind": "synthetic payment data",
+  "failure_isolated": true,
+  "invalid_input": "failed",
+  "raw_rows": 200,
+  "replay": "success",
+  "replay_unchanged": true
+}

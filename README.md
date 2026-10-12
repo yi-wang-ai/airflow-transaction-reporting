@@ -4,6 +4,15 @@ A small, tested data-engineering portfolio project using synthetic payment data.
 Built by Yi Wang with OpenAI Codex assistance. This is a personal project, not an
 Apache Software Foundation or Revolut product.
 
+## Standalone deployment and recovery lab (12 October 2026)
+
+A pinned Docker Compose deployment now runs independently of the Airflow source
+checkout. It includes file-backed secrets, separate database roles, a loopback-only
+UI, health checks, real DAG integration checks, and an isolated restore drill.
+See [deployment instructions](docs/DEPLOYMENT_LAB.md) and
+[local verification](evidence/deployment-20261012/VALIDATION.md).
+GitHub workflows are prepared; cloud deployment and GitHub execution are not claimed.
+
 ## Pipeline
 
 ```mermaid
@@ -54,7 +63,8 @@ All transaction data is synthetic.
 
 ## Run in an Airflow development environment
 
-This repository contains the Dag and tests; it does not bundle an Airflow deployment.
+The original Breeze procedure below is retained for historical reproduction.
+For the standalone deployment, use the deployment lab above.
 The demo was verified in the Apache Airflow development checkout. The related
 contribution branch now points to `14d9ef2c4703b9649a132c558b89ca260a17023f` on
 [the contribution branch](https://github.com/yi-wang-ai/airflow/tree/fix-72929-clear-task-state).
@@ -110,19 +120,17 @@ single/bulk UI options, regression tests, documentation, and numbered newsfragme
 Local validation recorded 1,057 passing backend tests and another suite of 335 passing
 tests (the suites overlap), plus nine UI tests, lint, type checking, and UI build.
 
-As checked on 2026-10-01, the PR is open and mergeable with no submitted reviews.
-Three workflows report `action_required`; upstream CI validation and merge are pending.
-Repository-wide local checks did not finish because unrelated generators launched
-separate Python 3.10 image builds. The bulk UI request behavior has tests, but its
-browser visual check was blocked. Local success does not imply upstream acceptance.
+As checked through GitHub on 2026-10-12, the PR is **closed, unmerged**.
+The local validation above is historical evidence and does not imply upstream
+acceptance. The standalone deployment lab is separate from that contribution.
 
 The portfolio Dag is separate from the upstream patch and is not included in that PR.
 
 ## Scope and limitations
 
 This is a batch reporting exercise, not a payment processor. It does not implement
-an API service, Kafka, fraud detection, payment corrections, authentication, or a
-production deployment. Transactions are immutable; conflicting updates are detected
+an API service, Kafka, fraud detection, payment corrections, or a production
+deployment. The teaching deployment adds Airflow UI authentication. Transactions are immutable; conflicting updates are detected
 by reconciliation, not applied. Small batches travel through XCom; a larger system
 would use external storage references. The 22 unit tests cover pure functions;
 PostgreSQL scenarios were verified through manual Dag runs.
